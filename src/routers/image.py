@@ -2,7 +2,7 @@ from fastapi import APIRouter, File, UploadFile, HTTPException
 import logging
 from io import BytesIO
 from starlette.responses import StreamingResponse
-from ..coe import COE
+from ..COE import COE
 from responses import Responses
 
 router = APIRouter(prefix="/image", tags=["Image"])
