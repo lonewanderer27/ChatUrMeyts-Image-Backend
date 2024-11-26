@@ -159,7 +159,7 @@ async def extract_semester_image_from_pdf(coe: UploadFile = File(...)):
 
 @router.post("/block_no", description="Extract the block number image of the COE PDF",
              responses=Responses.png_image_response("A PNG image of the block number section."))
-async def extract_block_no_image_from_pdf(coe: UploadFile = File(...)):
+async def extract_top_image_from_pdf(coe: UploadFile = File(...)):
     logger.info("Extracting block number image from COE PDF")
 
     coe_instance = await process_coe_file(coe)
@@ -169,3 +169,29 @@ async def extract_block_no_image_from_pdf(coe: UploadFile = File(...)):
 
     # Return the image as a StreamingResponse
     return image_response(block_no_image)
+
+@router.post("/top", description="Extract the top part image of the COE PDF",
+             responses=Responses.png_image_response("A PNG image of the top section"))
+async def extract_top_image_from_pdf(coe: UploadFile = File(...)):
+    logger.info("Extracting top image from COE PDF")
+
+    coe_instance = await process_coe_file(coe)
+
+    # Extract top image
+    top_image = coe_instance.get_top_image()
+
+    # Return the image as a StreamingResponse
+    return image_response(top_image)
+
+@router.post("/bottom", description="Extract the bottom part image of the COE PDF",
+             responses=Responses.png_image_response("A PNG image of the bottom section"))
+async def extract_top_image_from_pdf(coe: UploadFile = File(...)):
+    logger.info("Extracting bottom image from COE PDF")
+
+    coe_instance = await process_coe_file(coe)
+
+    # Extract bottom image
+    bottom_image = coe_instance.get_bottom_image()
+
+    # Return the image as a StreamingResponse
+    return image_response(bottom_image)
