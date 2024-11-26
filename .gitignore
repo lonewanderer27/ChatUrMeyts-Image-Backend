@@ -1,0 +1,7 @@
+__pycache__
+.idea
+.vscode
+.env
+env
+.space
+.vercel
