@@ -18,7 +18,7 @@ chaturmeytsimg = FastAPI(
 chaturmeytsimg.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=["*"],
+    allow_origins=["http://localhost", "http://localhost:5173", "https://chat-ur-meyts.vercel.app"],
     allow_methods=["*"],
     allow_headers=["*"]
 )
