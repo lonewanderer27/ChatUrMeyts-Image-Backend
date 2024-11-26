@@ -3,7 +3,6 @@ import logging
 from io import BytesIO
 from starlette.responses import StreamingResponse
 from ..COE import COE
-from responses import Responses
 
 router = APIRouter(prefix="/image", tags=["Image"])
 logger = logging.getLogger(__name__)
@@ -49,6 +48,23 @@ def image_response(image):
     image.save(img_byte_arr, format='PNG')
     img_byte_arr.seek(0)
     return StreamingResponse(img_byte_arr, media_type="image/png")
+
+class Responses:
+    @staticmethod
+    def png_image_response(description: str = "A PNG image file."):
+        return {
+            200: {
+                "description": description,
+                "content": {"image/png": {}},
+            },
+            400: {
+                "description": "File processing failed. Ensure the uploaded file is a valid PDF.",
+            },
+            500: {
+                "description": "An unexpected error occurred."
+            }
+        }
+
 
 @router.post("", description="Extract the image of the COE PDF",
              responses=Responses.png_image_response("A PNG image of the COE PDF."))
