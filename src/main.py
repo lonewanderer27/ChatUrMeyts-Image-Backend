@@ -10,8 +10,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 chaturmeytsimg = FastAPI(
-    title="Chat-Ur-Meyts OCR API",
-    description="API for Chat-Ur-Meyts OCR",
+    title="Chat-Ur-Meyts Image API",
+    description="API for Chat-Ur-Meyts Image",
     version="1.0"
 )
 
