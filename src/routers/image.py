@@ -26,18 +26,21 @@ class Responses:
 
 router = APIRouter(prefix="/image", tags=["Image"])
 
-
 @router.post("", description="Extract the image of the COE PDF",
              responses=Responses.png_image_response("A PNG image of the COE PDF."))
 async def extract_image_from_pdf(coe: UploadFile = File(...)):
     logger.info("Extracting image from COE PDF")
 
     try:
+        # # Ensure the uploaded file has a valid filename
+        if not coe.filename or not str(coe.filename).lower().endswith('.pdf'):
+            return {"error": "Invalid file type. Please upload a valid PDF file."}
+
         # Read the uploaded file into memory
         file_bytes = await coe.read()
 
         # Initialize COE object with in-memory bytes
-        coe_instance = COE(BytesIO(file_bytes), save_path="temp", save_images=False)
+        coe_instance = COE(file_bytes)
 
         # Load the COE PDF
         coe_instance.load_file()
@@ -56,9 +59,12 @@ async def extract_image_from_pdf(coe: UploadFile = File(...)):
         # Return the image as a StreamingResponse
         return StreamingResponse(img_byte_arr, media_type="image/png")
 
+    except AttributeError as ae:
+        logger.error(f"Attribute error while processing {getattr(coe, 'filename', 'unknown file')}: {str(ae)}")
+        return {"error": "File processing failed. Ensure the uploaded file is a valid PDF."}
     except Exception as e:
-        logger.error(f"Failed to process file {coe.filename}: {str(e)}")
-        return {"error": "Failed to process the file. Please check the file format and try again."}
+        logger.error(f"Unexpected error while processing {getattr(coe, 'filename', 'unknown file')}: {str(e)}")
+        return {"error": "An unexpected error occurred. Please try again."}
 
 
 @router.post("/course", description="Extract the course name image of the COE PDF",
