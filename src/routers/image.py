@@ -106,7 +106,7 @@ async def extract_student_no_image_from_pdf(coe: UploadFile = File(...)):
 
 @router.post("/acad_year", description="Extract the academic year image of the COE PDF",
              responses=Responses.png_image_response("A PNG image of the academic year section."))
-async def extract_acad_year_image_from_pdf(coe: UploadFile = File(...)):
+async def extract_year_level_image_from_pdf(coe: UploadFile = File(...)):
     logger.info("Extracting acad year image from COE PDF")
 
     coe_instance = await process_coe_file(coe)
@@ -119,7 +119,7 @@ async def extract_acad_year_image_from_pdf(coe: UploadFile = File(...)):
 
 @router.post("/year_level", description="Extract the year level image of the COE PDF",
              responses=Responses.png_image_response("A PNG image of the year level section."))
-async def extract_acad_year_image_from_pdf(coe: UploadFile = File(...)):
+async def extract_year_level_image_from_pdf(coe: UploadFile = File(...)):
     logger.info("Extracting year level image from COE PDF")
 
     coe_instance = await process_coe_file(coe)
