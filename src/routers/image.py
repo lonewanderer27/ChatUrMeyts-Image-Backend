@@ -33,18 +33,16 @@ async def extract_image_from_pdf(coe: UploadFile = File(...)):
     logger.info("Extracting image from COE PDF")
 
     try:
-        # Save the uploaded file temporarily
-        temp_file_path = f"temp_coe_image_{coe.filename}"
-        with open(temp_file_path, "wb") as temp_file:
-            temp_file.write(await coe.read())
+        # Read the uploaded file into memory
+        file_bytes = await coe.read()
 
-        # init COE object
-        coe_instance = COE(temp_file_path, save_path="temp", save_images=False)
+        # Initialize COE object with in-memory bytes
+        coe_instance = COE(BytesIO(file_bytes), save_path="temp", save_images=False)
 
-        # load the COE PDF
+        # Load the COE PDF
         coe_instance.load_file()
 
-        # resize the image
+        # Resize the image
         coe_instance.resize_image()
 
         # Extract top image
@@ -55,20 +53,12 @@ async def extract_image_from_pdf(coe: UploadFile = File(...)):
         top_image.save(img_byte_arr, format='PNG')
         img_byte_arr.seek(0)
 
-        # Optionally, clean up the temporary file
-        os.remove(temp_file_path)
-
         # Return the image as a StreamingResponse
         return StreamingResponse(img_byte_arr, media_type="image/png")
 
     except Exception as e:
         logger.error(f"Failed to process file {coe.filename}: {str(e)}")
         return {"error": "Failed to process the file. Please check the file format and try again."}
-
-    finally:
-        # Ensure temporary files are deleted
-        if os.path.exists(temp_file_path):
-            os.remove(temp_file_path)
 
 
 @router.post("/course", description="Extract the course name image of the COE PDF",
