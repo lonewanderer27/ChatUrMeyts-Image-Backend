@@ -1,11 +1,9 @@
-# image.py
-
 from fastapi import APIRouter, File, UploadFile, HTTPException
 import logging
 from io import BytesIO
 from starlette.responses import StreamingResponse
-from coe import COE  # Assuming COE class is imported from coe.py
-from responses import Responses  # Assuming Responses is imported
+from ..coe import COE
+from responses import Responses
 
 router = APIRouter(prefix="/image", tags=["Image"])
 logger = logging.getLogger(__name__)
